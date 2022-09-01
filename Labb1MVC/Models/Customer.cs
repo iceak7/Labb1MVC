@@ -36,5 +36,7 @@ namespace Labb1MVC.Models
         [Display(Name = "Zip Code")]
         [StringLength(5, MinimumLength = 5)]
         public string ZipCode { get; set; }
+
+        public ICollection<BookBorrow> BookBorrows { get; set; }
     }
 }

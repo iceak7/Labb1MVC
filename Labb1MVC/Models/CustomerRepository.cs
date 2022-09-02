@@ -20,6 +20,25 @@ namespace Labb1MVC.Models
             }
         }
 
+        public void AddCustomer(Customer customer)
+        {
+            _appDbContext.Customers.Add(customer);
+            _appDbContext.SaveChangesAsync();
+        }
+
+        public void Delete(Customer customer)
+        {
+            _appDbContext.Customers.Remove(customer);
+            _appDbContext.SaveChangesAsync();
+        }
+
+        public void Edit(Customer customer)
+        {
+           _appDbContext.Customers.Update(customer);
+           _appDbContext.SaveChangesAsync();
+
+        }
+
         public Customer GetCustomerById(int customerId)
         {
             return _appDbContext.Customers.FirstOrDefault(c => c.CustomerId == customerId);

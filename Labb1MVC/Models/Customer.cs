@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Labb1MVC.Models
     public class Customer
     {
         [Key]
+        [BindNever]
         public int CustomerId { get; set; }
 
         [Required(ErrorMessage = "Please enter your first name!")]
@@ -36,7 +38,7 @@ namespace Labb1MVC.Models
         [Display(Name = "Zip Code")]
         [StringLength(5, MinimumLength = 5)]
         public string ZipCode { get; set; }
-
+        [BindNever]
         public ICollection<BookBorrow> BookBorrows { get; set; }
     }
 }

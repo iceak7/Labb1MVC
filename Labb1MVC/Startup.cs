@@ -30,6 +30,8 @@ namespace Labb1MVC
             services.AddControllersWithViews();
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +58,7 @@ namespace Labb1MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Customers}/{action=Index}/{id?}");
             });
         }
     }

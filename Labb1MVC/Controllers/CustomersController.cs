@@ -32,5 +32,24 @@ namespace Labb1MVC.Controllers
 
             return View(customer);
         }
+
+        public IActionResult AddNew()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddNew([Bind("Name, PhoneNr, City, Address, ZipCode")]Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                _customersRepository.AddCustomer(customer);
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(customer);
+        }
     }
 }

@@ -1,32 +1,42 @@
 ﻿@model IEnumerable<Customer>
 
 
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Telephone Number</th>
-            <th scope="col">Address</th>
-            <th scope="col">Zip Code</th>
-            <th scope="col">City</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var customer in Model)
-        {
+
+<div class="row mt-3">
+    <table class="table">
+        <thead class="thead-dark">
             <tr>
-                <td>@customer.Name</td>
-                <td>@customer.PhoneNr</td>
-                <td>@customer.Address</td>
-                <td>@customer.ZipCode</td>
-                <td>@customer.City</td>
-                <td>
-                    <a asp-action="Detail" asp-route-id="@customer.CustomerId" class="btn">
-                        <i class="fa-solid fa-circle-info"></i>
-                    </a>
-                </td>
+                <th scope="col">Name</th>
+                <th scope="col">Telephone Number</th>
+                <th scope="col">Address</th>
+                <th scope="col">Zip Code</th>
+                <th scope="col">City</th>
+                <th scope="col"></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.PhoneNr</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.ZipCode</td>
+                    <td>@customer.City</td>
+                    <td>
+                        <a asp-action="Detail" asp-route-id="@customer.CustomerId" class="btn">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row float-right col-md-4 justify-content-end">
+    <a asp-action="AddNew" class="btn btn-success">
+        <i class="fa-solid fa-plus"></i> Add New Customer
+    </a>
+</div>
+

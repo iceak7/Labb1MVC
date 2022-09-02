@@ -24,9 +24,15 @@
                     <td>@customer.ZipCode</td>
                     <td>@customer.City</td>
                     <td>
-                        <a asp-action="Detail" asp-route-id="@customer.CustomerId" class="btn">
-                            <i class="fa-solid fa-circle-info"></i>
-                        </a>
+                        <div class="btn-group-sm" role="group">
+                            <a asp-action="Detail" asp-route-id="@customer.CustomerId" class="btn btn-primary">
+                                <i class="fa-solid fa-info"></i>
+                            </a>
+                                <a  asp-action="Delete" asp-route-id="@customer.CustomerId" class="btn btn-danger" onclick="return confirm('Are you sure to delete this customer?')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                        </div>
+
                     </td>
                 </tr>
             }

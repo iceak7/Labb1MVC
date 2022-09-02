@@ -9,7 +9,7 @@ namespace Labb1MVC.Models
     {
         IEnumerable<Customer> GetAllCustomers { get; }
         Customer GetCustomerById(int customerId);
-        void AddCustomer(Customer customer);
+        Customer AddCustomer(Customer customer);
         void Edit(Customer customer);
         void Delete(Customer customer);
 

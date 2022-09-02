@@ -33,6 +33,7 @@ namespace Labb1MVC.Controllers
             return View(customer);
         }
 
+        [HttpGet]
         public IActionResult AddNew()
         {
             return View();
@@ -42,14 +43,35 @@ namespace Labb1MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddNew([Bind("Name, PhoneNr, City, Address, ZipCode")]Customer customer)
         {
+            
             if (ModelState.IsValid)
             {
-                _customersRepository.AddCustomer(customer);
+                var createdCustomer = _customersRepository.AddCustomer(customer);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Detail), new { id = createdCustomer.CustomerId });
             }
 
             return View(customer);
+
+        }
+
+        public IActionResult Delete(int id)
+        {
+
+            var customerToDelete = _customersRepository.GetCustomerById(id);
+
+            if (customerToDelete != null)
+            {
+                _customersRepository.Delete(customerToDelete);
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return NotFound();
+            }
+           
+           
+
         }
     }
 }

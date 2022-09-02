@@ -20,22 +20,23 @@ namespace Labb1MVC.Models
             }
         }
 
-        public void AddCustomer(Customer customer)
+        public Customer AddCustomer(Customer customer)
         {
-            _appDbContext.Customers.Add(customer);
-            _appDbContext.SaveChangesAsync();
+            var createdCustomer =_appDbContext.Customers.Add(customer);
+            _appDbContext.SaveChanges();
+            return createdCustomer.Entity;
         }
 
         public void Delete(Customer customer)
         {
             _appDbContext.Customers.Remove(customer);
-            _appDbContext.SaveChangesAsync();
+            _appDbContext.SaveChanges();
         }
 
         public void Edit(Customer customer)
         {
            _appDbContext.Customers.Update(customer);
-           _appDbContext.SaveChangesAsync();
+           _appDbContext.SaveChanges();
 
         }
 

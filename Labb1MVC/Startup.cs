@@ -30,6 +30,8 @@ namespace Labb1MVC
             services.AddControllersWithViews();
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IBookBorrowRepository, BookBorrowRepository>();
+            services.AddScoped<IBookRepository, BookRepository>();
 
 
         }

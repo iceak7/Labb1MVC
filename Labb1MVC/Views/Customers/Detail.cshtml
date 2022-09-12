@@ -1,34 +1,127 @@
-﻿@model Customer
+﻿@model CustomerDetailViewModel
 
-<div class="row">
+
+@if (ViewData["StudentDetailMessage"] != null)
+{
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        @ViewData["StudentDetailMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+<div class="row bg-light p-2" >
     <div class="col-md-6 offset-md-3">
-        <h2 class="text-center">@Model.Name</h2>
+        <h2 class="text-center">@Model.Customer.Name</h2>
         <table class="table mt-3">
             <tbody>
                 <tr>
                     <th>Telephone Number</th>
-                    <td>@Model.PhoneNr</td>
+                    <td>@Model.Customer.PhoneNr</td>
                 </tr>
                 <tr>
                     <th>Address</th>
-                    <td>@Model.Address</td>
+                    <td>@Model.Customer.Address</td>
                 </tr>
                 <tr>
                     <th>Zip Code</th>
-                    <td>@Model.ZipCode</td>
+                    <td>@Model.Customer.ZipCode</td>
                 </tr>
                 <tr>
                     <th>City</th>
-                    <td>@Model.City</td>
+                    <td>@Model.Customer.City</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h4 class="text-center">Borrow History</h4>
+        @if (Model.BookBorrows.Count == 0)
+        {<p class="text-center">No borrowed books found</p>}
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Book</th>
+                        <th scope="col">Borrow Date</th>
+                        <th scope="col">Return Latest</th>
+                        <th scope="col">Returned</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var borrow in Model.BookBorrows)
+                    {
+                        <tr>
+                            <td>@borrow.Book.Title</td>
+                            <td>@borrow.BorrowDate</td>
+                            <td>@borrow.ReturnLatestDate</td>
+                            @if (borrow.Returned)
+                            {
+                                <td class="text-success">Yes</td>
+                            }
+                            else
+                            {
+                                <td class="text-danger">
+                                    No
+                                </td>
+                            }
+                            <td>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="col-md-6">
+        <h4 class="text-center" >Borrow A New Book</h4>
+        <form asp-controller="Borrow" asp-action="NewBorrow" autocomplete="off">
+            <input type="hidden" asp-for="@Model.BookBorrow.BookBorrowId" />
+            <input type="hidden" asp-for="@Model.BookBorrow.BorrowDate" />
+            <input type="hidden" asp-for="@Model.BookBorrow.ReturnedDate" />
+            <input type="hidden" asp-for="@Model.BookBorrow.Returned" />
+            <input type="hidden" asp-for="@Model.BookBorrow.CustomerId" value="@Model.Customer.CustomerId" />
+ 
+            <div class="mb-3">
+                <label for="selectBook" class="form-label">Choose book to borrow</label>
+                <select asp-for="@Model.BookBorrow.BookId" id="selectBook" class="form-control">
+                    @await Component.InvokeAsync("BookOptions")
+                </select>
+                <span asp-validation-for="@Model.BookBorrow.BookId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="@Model.BookBorrow.ReturnLatestDate" class="control-label"></label>
+                <input type="datetime-local" asp-for="@Model.BookBorrow.ReturnLatestDate" class="form-control" />
+                <span asp-validation-for="@Model.BookBorrow.ReturnLatestDate" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="submit" value="NewBorrow" class="btn btn-primary w-100" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
 <div class="row justify-content-end">
-    <div class="col-md-4 ">
-        <a asp-action="Index" class="btn btn-primary">
+    <div class="col-md-12">
+        <a asp-action="Index" class="btn btn-primary float-right">
             <i class="fa-solid fa-user-group"></i> View all customers
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Customer.CustomerId" class="btn btn-warning float-right mr-2">
+            <i class="fa-solid fa-pen"></i> Edit
         </a>
     </div>
 </div>

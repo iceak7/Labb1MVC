@@ -10,7 +10,6 @@ namespace Labb1MVC.Models
     public class Customer
     {
         [Key]
-        [BindNever]
         public int CustomerId { get; set; }
 
         [Required(ErrorMessage = "Please enter your first name!")]

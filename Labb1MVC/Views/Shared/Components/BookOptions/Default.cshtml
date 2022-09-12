@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Book>
+
+@foreach (var b in Model)
+{
+    if (b.NumberOfBooksInStock > 0)
+    {
+        <option value=@b.BookId>@b.Title by @b.Author (@b.NumberOfBooksInStock left)</option>
+    }
+    else
+    {
+        <option value=@b.BookId disabled>@b.Title by @b.Author (@b.NumberOfBooksInStock left)</option>
+    }
+
+}

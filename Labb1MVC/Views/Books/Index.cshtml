@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Book>
+
+
+<div class="row mt-3">
+    <h2>All Books</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Total Nr Of Books</th>
+                <th scope="col">Books In Stock</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.TotalNumberOfBooks</td>
+                    <td>@book.NumberOfBooksInStock</td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

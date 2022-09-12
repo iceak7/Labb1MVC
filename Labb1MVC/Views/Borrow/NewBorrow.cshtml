@@ -1,0 +1,46 @@
+﻿@model BookBorrow
+
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Borrow A Book</h1>
+        <form asp-action="NewBorrow" autocomplete="off">
+            <input type="hidden" asp-for="BookBorrowId" />
+            <input type="hidden" asp-for="BorrowDate" />
+            <input type="hidden" asp-for="ReturnedDate" />
+            <input type="hidden" asp-for="Returned" />
+
+            <div class="mb-3">
+                <label for="selectCustomer" class="form-label">Choose who is borrowing</label>
+                <select asp-for="CustomerId" id="selectCustomer" class="form-control">
+                    @await Component.InvokeAsync("CustomerOptions")
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="selectBook" class="form-label">Choose book to borrow</label>
+                <select asp-for="BookId" id="selectBook" class="form-control">
+                    @await Component.InvokeAsync("BookOptions")
+                </select>
+                <span asp-validation-for="BookId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ReturnLatestDate" class="control-label"></label>
+                <input type="datetime-local" asp-for="ReturnLatestDate" class="form-control" />
+                <span asp-validation-for="ReturnLatestDate" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="row mt-2">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="submit" value="NewBorrow" class="btn btn-primary w-100" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

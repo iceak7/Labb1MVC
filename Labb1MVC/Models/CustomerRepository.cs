@@ -33,10 +33,11 @@ namespace Labb1MVC.Models
             _appDbContext.SaveChanges();
         }
 
-        public void Edit(Customer customer)
+        public Customer Edit(Customer customer)
         {
-           _appDbContext.Customers.Update(customer);
+           var updatedCustomer = _appDbContext.Customers.Update(customer);
            _appDbContext.SaveChanges();
+           return updatedCustomer.Entity;
 
         }
 

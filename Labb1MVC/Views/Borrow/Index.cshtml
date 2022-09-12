@@ -1,0 +1,90 @@
+﻿@model IEnumerable<BookBorrow>
+
+@{ 
+    var sort = ViewData["BorrowSortOrder"].ToString();
+    var status = ViewData["BorrowStatus"].ToString();
+}
+
+        <form asp-action="Index" method="get" class="row form-inline row align-items-end">
+            <div class="col-md-3">
+                <label for="sortBorrows" class="form-label w-100 justify-content-start">Order by</label>
+                <select name="sortOrder" id="sortBorrows" class="form-control">
+                    @{if(sort == "nameAsc") {<option selected value="nameAsc">Name Asc.</option>} else{<option value = "nameAsc">Name Asce.</option>} }
+                    @{if(sort == "nameDesc") {<option selected value="nameDesc">Name Desc.</option>} else{<option value="nameDesc">Name Desc.</option>} }
+                    @{if(sort == "bookTitleAsc") {<option selected value="bookTitleAsc">Book Title Asce.</option>} else{<option value="bookTitleAsc">Book Title Asce.</option>} }
+                    @{if(sort == "bookTitleDesc") {<option selected value="bookTitleDesc">Book Title Desc.</option>} else{<option value="bookTitleDesc">Book Title Desc.</option>} }
+                    @{if(sort == "borrowDateAsc") {<option selected value="borrowDateAsc">Borrow Date Asce.</option>} else{<option value="borrowDateAsc">Borrow Date Asce.</option>} }
+                    @{if(sort == "borrowDateDesc") {<option selected value="borrowDateDesc">Borrow Date Desc.</option>} else{<option value="borrowDateDesc">Borrow Date Desc.</option>} }
+                </select>
+            </div>
+            <div class="col-md-3" >
+                <label for="showBorrowStatus" class="form-label w-100 justify-content-start">Filter by status</label>
+                <select name="borrowStatus" id="showBorrowStatus" class="form-control">
+                    @{if(status == "all") {<option selected value="all">Show All</option>} else{<option value="all">Show All</option>} }
+                    @{if(status == "returned") {<option selected value="returned">Returned</option>} else{<option value="returned">Returned</option>} }
+                    @{if(status == "notReturned") {<option selected value="notReturned">Not Returned</option>} else{<option value="notReturned">Not Returned</option>} }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="submitBorrowsFilter"></label>
+                <button type="submit" class="btn btn-primary" id="submitBorrowsFilter">Filter</button>
+            </div>
+        </form>
+
+
+
+    <div class="row mt-3">
+        <h2>Borrow History</h2>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Book</th>
+                    <th scope="col">Person</th>
+                    <th scope="col">Borrow Date</th>
+                    <th scope="col">Return Latest Date</th>
+                    <th scope="col">Returned</th>
+                    <th scope="col">Returned Date</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var borrow in Model)
+                {
+                    <tr>
+                        <td>@borrow.Book.Title</td>
+                        <td>@borrow.Customer.Name</td>
+                        <td>@borrow.BorrowDate</td>
+                        <td>@borrow.ReturnLatestDate</td>
+                        @if (borrow.Returned)
+                        {
+                            <td class="text-success">Yes</td>
+                        }
+                        else
+                        {
+                            <td class="text-danger">No</td>
+                        }
+                        <td>@borrow.ReturnedDate</td>
+                        <td>
+                            <div class="btn-group-sm" role="group">
+
+                                @if (borrow.Returned == false)
+                                {
+                                    <a asp-action="ReturnABook" asp-route-id="@borrow.BookBorrowId" class="btn btn-primary" onclick="return confirm('Are you sure to return this book?')">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                    </a>
+                                }
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-end">
+        <div class="col-md-4">
+            <a asp-action="NewBorrow" class="btn btn-success float-right">
+                <i class="fa-solid fa-plus"></i> Borrow a book
+            </a>
+        </div>
+    </div>

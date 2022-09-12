@@ -1,4 +1,5 @@
 ﻿using Labb1MVC.Models;
+using Labb1MVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace Labb1MVC.Controllers
     public class CustomersController : Controller
     {
         private readonly ICustomerRepository _customersRepository;
+        private readonly IBookBorrowRepository _bookBorrowRepository;
 
-        public CustomersController(ICustomerRepository customerRepository)
+        public CustomersController(ICustomerRepository customerRepository, IBookBorrowRepository bookBorrowRepository)
         {
             _customersRepository = customerRepository;
+            _bookBorrowRepository = bookBorrowRepository;
         }
         public IActionResult Index()
         {
@@ -22,7 +25,7 @@ namespace Labb1MVC.Controllers
             return View(customers);
         }
 
-        public IActionResult Detail(int id)
+        public IActionResult Detail(int id, string mes)
         {
             var customer = _customersRepository.GetCustomerById(id);
             if (customer == null)
@@ -30,7 +33,18 @@ namespace Labb1MVC.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+            if (mes != null)
+            {
+                ViewData["StudentDetailMessage"] = mes;
+            }
+
+            var bookBorrows = _bookBorrowRepository.GetBookBorrowsByCustomer(id);
+
+            return View(new CustomerDetailViewModel
+            {
+                Customer = customer,
+                BookBorrows = bookBorrows.ToList()
+            }); 
         }
 
         [HttpGet]
@@ -48,12 +62,43 @@ namespace Labb1MVC.Controllers
             {
                 var createdCustomer = _customersRepository.AddCustomer(customer);
 
-                return RedirectToAction(nameof(Detail), new { id = createdCustomer.CustomerId });
+                return RedirectToAction(nameof(Detail), new { id = createdCustomer.CustomerId, mes= "Customer Added" });
+            }
+            return View(customer);
+
+        }
+
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+
+            var studentToUpdate = _customersRepository.GetCustomerById(id);
+
+            if(studentToUpdate == null)
+            {
+                return NotFound();
+            }
+            return View(studentToUpdate);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([Bind("CustomerId, Name, PhoneNr, City, Address, ZipCode")] Customer customer)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var updatedCustomer = _customersRepository.Edit(customer);
+                return RedirectToAction(nameof(Detail), new { id = updatedCustomer.CustomerId, mes = "Customer Updated" });
             }
 
             return View(customer);
 
         }
+
+
+
 
         public IActionResult Delete(int id)
         {

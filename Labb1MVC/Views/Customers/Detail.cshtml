@@ -1,16 +1,29 @@
 ﻿@model CustomerDetailViewModel
 
+@{ 
+    var messageStatus = "";
+    if (ViewData["StudentDetailMessageStatus"] != null)
+    {
+        messageStatus = "alert-danger";
+    }
+    else
+    {
+        messageStatus = "alert-primary";
+    }
+
+}
+
 
 @if (ViewData["StudentDetailMessage"] != null)
 {
-    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <div class="alert @messageStatus alert-dismissible fade show" role="alert">
         @ViewData["StudentDetailMessage"]
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 }
-<div class="row bg-light p-2" >
+<div class="row bg-light p-2">
     <div class="col-md-6 offset-md-3">
         <h2 class="text-center">@Model.Customer.Name</h2>
         <table class="table mt-3">
@@ -34,9 +47,17 @@
             </tbody>
         </table>
     </div>
+    <div class="col-12 float-right">
+        <a asp-action="Index" class="btn btn-primary float-right">
+            <i class="fa-solid fa-user-group"></i> View all customers
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Customer.CustomerId" class="btn btn-warning float-right mr-2">
+            <i class="fa-solid fa-pen"></i> Edit
+        </a>
+    </div>
 </div>
 <div class="row mt-4">
-    <div class="col-md-6">
+    <div class="col-md-12 col-lg-6">
         <h4 class="text-center">Borrow History</h4>
         @if (Model.BookBorrows.Count == 0)
         {<p class="text-center">No borrowed books found</p>}
@@ -69,8 +90,14 @@
                                     No
                                 </td>
                             }
-                            <td>
-                            </td>
+                        <td>
+                            @if (borrow.Returned == false)
+                            {
+                                <a asp-controller="borrow" asp-action="returnABook" asp-route-id="@borrow.BookBorrowId" asp-route-from="customerDetail"  class="btn btn-primary" onclick="return confirm('Are you sure to return this book?')">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </a>
+                            }
+                        </td>
                         </tr>
                     }
                 </tbody>
@@ -78,16 +105,16 @@
         }
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-12 col-lg-6 mt-4 mt-lg-0 mt-xl-0" >
         <h4 class="text-center" >Borrow A New Book</h4>
-        <form asp-controller="Borrow" asp-action="NewBorrow" autocomplete="off">
+        <form asp-controller="Borrow" asp-action="NewBorrow" asp-route-from="customerDetail" autocomplete="off">
             <input type="hidden" asp-for="@Model.BookBorrow.BookBorrowId" />
             <input type="hidden" asp-for="@Model.BookBorrow.BorrowDate" />
             <input type="hidden" asp-for="@Model.BookBorrow.ReturnedDate" />
             <input type="hidden" asp-for="@Model.BookBorrow.Returned" />
             <input type="hidden" asp-for="@Model.BookBorrow.CustomerId" value="@Model.Customer.CustomerId" />
  
-            <div class="mb-3">
+            <div class="mb-3 border-top pt-2">
                 <label for="selectBook" class="form-label">Choose book to borrow</label>
                 <select asp-for="@Model.BookBorrow.BookId" id="selectBook" class="form-control">
                     @await Component.InvokeAsync("BookOptions")
@@ -100,28 +127,10 @@
                 <input type="datetime-local" asp-for="@Model.BookBorrow.ReturnLatestDate" class="form-control" />
                 <span asp-validation-for="@Model.BookBorrow.ReturnLatestDate" class="text-danger"></span>
             </div>
-
-
-
-            <div class="row mt-2">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="submit" value="NewBorrow" class="btn btn-primary w-100" />
-                    </div>
-                </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success w-100"><i class="fa-solid fa-book"></i> Borrow</button>
             </div>
         </form>
     </div>
-
-
 </div>
-<div class="row justify-content-end">
-    <div class="col-md-12">
-        <a asp-action="Index" class="btn btn-primary float-right">
-            <i class="fa-solid fa-user-group"></i> View all customers
-        </a>
-        <a asp-action="Edit" asp-route-id="@Model.Customer.CustomerId" class="btn btn-warning float-right mr-2">
-            <i class="fa-solid fa-pen"></i> Edit
-        </a>
-    </div>
-</div>
+

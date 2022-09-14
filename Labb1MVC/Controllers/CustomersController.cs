@@ -25,7 +25,7 @@ namespace Labb1MVC.Controllers
             return View(customers);
         }
 
-        public IActionResult Detail(int id, string mes)
+        public IActionResult Detail(int id, string mes, string mesStatus)
         {
             var customer = _customersRepository.GetCustomerById(id);
             if (customer == null)
@@ -36,6 +36,10 @@ namespace Labb1MVC.Controllers
             if (mes != null)
             {
                 ViewData["StudentDetailMessage"] = mes;
+                if (mesStatus != null)
+                {
+                    ViewData["StudentDetailMessageStatus"] = mesStatus;
+                }
             }
 
             var bookBorrows = _bookBorrowRepository.GetBookBorrowsByCustomer(id);

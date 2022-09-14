@@ -15,8 +15,10 @@ namespace Labb1MVC.Controllers
         {
             _bookBorrowRepository = bookBorrowRepository;
         }
-        public IActionResult Index(string sortOrder, string borrowStatus)
+        public IActionResult Index(string sortOrder, string borrowStatus, int? pageNumber)
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentBorrowStatus"] = borrowStatus;
 
             var borrows = _bookBorrowRepository.GetAllBookBorrows();
 
@@ -68,18 +70,29 @@ namespace Labb1MVC.Controllers
                     break;
             }
 
+            int pageSize = 5;
 
-            return View(borrows);
+            return View(PaginatedList<BookBorrow>.Create(borrows, pageNumber ?? 1, pageSize));
         }
 
-        public IActionResult ReturnABook(int id)
+        public IActionResult ReturnABook(int id, string from)
         {
             if (_bookBorrowRepository.ReturnABook(id))
             {
+                if(from == "customerDetail")
+                {
+                    var bookBorrow = _bookBorrowRepository.GetBookBorrowById(id);
+                    return RedirectToAction("Detail", "Customers", new { id = bookBorrow.CustomerId, mes = "Succesfully returned a book" });
+                }
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                if (from == "customerDetail")
+                {
+                    var bookBorrow = _bookBorrowRepository.GetBookBorrowById(id);
+                    return RedirectToAction("Detail", "Customers", new { id = bookBorrow.CustomerId, mes = "Failed to return a book. Try again.", mesStatus = "failed" });
+                }
                 return NotFound();
             }
         }
@@ -92,13 +105,22 @@ namespace Labb1MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult NewBorrow([Bind("ReturnLatestDate, CustomerId, BookId")]BookBorrow bookBorrow)
+        public IActionResult NewBorrow([Bind("ReturnLatestDate, CustomerId, BookId")]BookBorrow bookBorrow, string from)
         {
             if (ModelState.IsValid)
             {
                 _bookBorrowRepository.BorrowABook(bookBorrow);
+
+                if (from == "customerDetail")
+                {
+                    return RedirectToAction("Detail", "Customers", new { id = bookBorrow.CustomerId, mes = "Succesfully borrowed a book" });
+                }
                 return RedirectToAction(nameof(Index));
 
+            }
+            if (from == "customerDetail")
+            {
+                return RedirectToAction("Detail", "Customers", new { id = bookBorrow.CustomerId, mes = "Failed to borrow a book. Check if the date is correct and the book is in stock.", mesStatus="failed" });
             }
             return View(bookBorrow);
 

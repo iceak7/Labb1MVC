@@ -10,6 +10,7 @@ namespace Labb1MVC.Models
         IEnumerable<BookBorrow> GetAllBookBorrows();
         IEnumerable<BookBorrow> GetBookBorrowsByCustomer(int customerId);
         IEnumerable<BookBorrow> GetBookBorrowsByBook(int bookId);
+        BookBorrow GetBookBorrowById(int borrowId);
         bool ReturnABook(int bookBorrowId);
         BookBorrow BorrowABook(BookBorrow bookBorrow);
     }

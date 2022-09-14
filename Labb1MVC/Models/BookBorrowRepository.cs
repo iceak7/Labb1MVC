@@ -42,6 +42,11 @@ namespace Labb1MVC.Models
             return borrows.ToList();
         }
 
+        public BookBorrow GetBookBorrowById(int borrowId)
+        {
+            return _appDbContext.BookBorrows.FirstOrDefault(b => b.BookBorrowId == borrowId);
+        }
+
         public IEnumerable<BookBorrow> GetBookBorrowsByBook(int bookId)
         {
             var borrows = _appDbContext.BookBorrows.Where(b=>b.BookId==bookId).Include(bo => bo.Customer);

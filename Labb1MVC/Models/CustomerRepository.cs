@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,13 @@ namespace Labb1MVC.Models
 
         public void Delete(Customer customer)
         {
+            var booksNotReturned = _appDbContext.BookBorrows.Where(b => b.CustomerId == customer.CustomerId & b.Returned == false).Include(bb=>bb.Book);
+
+            foreach (var book in booksNotReturned)
+            {
+                book.Book.NumberOfBooksInStock++;
+            }
+
             _appDbContext.Customers.Remove(customer);
             _appDbContext.SaveChanges();
         }
